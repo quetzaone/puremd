@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="1200" height="290" viewBox="0 0 1200 290"
+     role="img" aria-labelledby="ladder-title ladder-desc">
+  <title id="ladder-title">How PureMD widens what a document may do</title>
+  <desc id="ladder-desc">Three stages. Safe mode is the default: raw HTML is never parsed, every image is a placeholder, and nothing reaches the network. Extended mode is turned on per tab and renders six inert HTML tags plus images stored beside the file, with the bytes checked natively before anything is displayed. Remote images are approved one URL at a time, only for URLs the document itself names, after a dialog that names the host, and are fetched by the native side rather than the WebView. Every stage is opt-in and revocable.</desc>
+
+  <defs>
+    <symbol id="s" viewBox="0 0 12 14">
+      <path d="M6 0.6 L11.4 2.8 V7 C11.4 10.2 9 12.6 6 13.5 C3 12.6 0.6 10.2 0.6 7 V2.8 Z"
+            fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
+    </symbol>
+  </defs>
+
+  <rect width="1200" height="290" rx="26" fill="#0d1219"/>
+  <rect x="0.75" y="0.75" width="1198.5" height="288.5" rx="25.25"
+        fill="none" stroke="#2b3441" stroke-width="1.5"/>
+
+  <!-- stage 1 — the default -->
+  <g transform="translate(56 44)">
+    <rect width="324" height="202" rx="14" fill="#161c26"/>
+    <rect x="0.6" y="0.6" width="322.8" height="200.8" rx="13.4"
+          fill="none" stroke="#2b3441" stroke-width="1.2"/>
+    <g transform="translate(26 27)" color="#4ac160">
+      <use href="#s" x="0" y="0" width="14" height="16.3"/>
+    </g>
+    <text x="50" y="42" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+          font-size="25" font-weight="600" fill="#e9eff6">Safe mode</text>
+    <text x="26" y="74" font-family="ui-monospace,SFMono-Regular,Menlo,monospace"
+          font-size="17" letter-spacing="1.6" fill="#4ac160">DEFAULT</text>
+    <line x1="26" y1="92" x2="298" y2="92" stroke="#2b3441" stroke-width="1"/>
+    <text x="26" y="122" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+          font-size="20" fill="#ccd6e1">Raw HTML is never parsed</text>
+    <text x="26" y="152" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+          font-size="20" fill="#ccd6e1">Images are placeholders</text>
+    <text x="26" y="182" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+          font-size="20" fill="#ccd6e1">No network, at all</text>
+  </g>
+
+  <path d="M392 145 h26" stroke="#45505f" stroke-width="1.6" fill="none"/>
+  <path d="M426 145 l-9 -5.5 v11 z" fill="#45505f"/>
+
+  <!-- stage 2 — opt-in, per tab -->
+  <g transform="translate(438 44)">
+    <rect width="324" height="202" rx="14" fill="#161c26"/>
+    <rect x="0.6" y="0.6" width="322.8" height="200.8" rx="13.4"
+          fill="none" stroke="#d8a32c" stroke-opacity="0.38" stroke-width="1.2"/>
+    <g transform="translate(26 27)" color="#d8a32c">
+      <use href="#s" x="0" y="0" width="14" height="16.3"/>
+    </g>
+    <text x="50" y="42" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+          font-size="25" font-weight="600" fill="#e9eff6">Extended mode</text>
+    <text x="26" y="74" font-family="ui-monospace,SFMono-Regular,Menlo,monospace"
+          font-size="17" letter-spacing="1.6" fill="#d8a32c">OPT-IN, PER TAB</text>
+    <line x1="26" y1="92" x2="298" y2="92" stroke="#2b3441" stroke-width="1"/>
+    <text x="26" y="122" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+          font-size="20" fill="#ccd6e1">Six inert HTML tags</text>
+    <text x="26" y="152" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+          font-size="20" fill="#ccd6e1">Images beside the file</text>
+    <text x="26" y="182" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+          font-size="20" fill="#ccd6e1">Bytes checked natively</text>
+  </g>
+
+  <path d="M774 145 h26" stroke="#45505f" stroke-width="1.6" fill="none"/>
+  <path d="M808 145 l-9 -5.5 v11 z" fill="#45505f"/>
+
+  <!-- stage 3 — opt-in, per URL -->
+  <g transform="translate(820 44)">
+    <rect width="324" height="202" rx="14" fill="#161c26"/>
+    <rect x="0.6" y="0.6" width="322.8" height="200.8" rx="13.4"
+          fill="none" stroke="#d8a32c" stroke-opacity="0.38" stroke-width="1.2"/>
+    <g transform="translate(26 27)" color="#d8a32c">
+      <use href="#s" x="0" y="0" width="14" height="16.3"/>
+    </g>
+    <text x="50" y="42" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+          font-size="25" font-weight="600" fill="#e9eff6">Remote images</text>
+    <text x="26" y="74" font-family="ui-monospace,SFMono-Regular,Menlo,monospace"
+          font-size="17" letter-spacing="1.6" fill="#d8a32c">OPT-IN, PER URL</text>
+    <line x1="26" y1="92" x2="298" y2="92" stroke="#2b3441" stroke-width="1"/>
+    <text x="26" y="122" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+          font-size="20" fill="#ccd6e1">Only URLs the file names</text>
+    <text x="26" y="152" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+          font-size="20" fill="#ccd6e1">A dialog names the host</text>
+    <text x="26" y="182" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+          font-size="20" fill="#ccd6e1">Never by the WebView</text>
+  </g>
+</svg>

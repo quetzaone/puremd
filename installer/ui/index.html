@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>PureMD Setup</title>
+<style>
+/*FONTS*/
+:root { color-scheme: dark }
+* { box-sizing: border-box }
+html, body { margin: 0; height: 100%; overflow: hidden }
+body {
+  background: #0d1219;
+  font-family: system-ui, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+  cursor: default;
+  display: flex;
+  flex-direction: column;
+}
+button { font-family: inherit; appearance: none; box-shadow: none; cursor: pointer }
+a { color: #6cb0ff; text-decoration: none }
+a:hover { color: #8ec5ff; text-decoration: underline }
+
+@keyframes pmIn { from { opacity: 0; transform: translateY(2px) } to { opacity: 1; transform: none } }
+@keyframes pmBar { 0% { transform: translateX(-110%) } 100% { transform: translateX(330%) } }
+@keyframes pmUp { from { opacity: 0; transform: translateY(10px) } to { opacity: 1; transform: none } }
+@keyframes pmPulse { from { opacity: .35 } to { opacity: 1 } }
+
+/* titlebar */
+.tb { flex: none; display: flex; align-items: center; height: 38px; background: #05080d; border-bottom: 1px solid #1b2129 }
+.tb-drag { flex: 1; display: flex; align-items: center; gap: 9px; padding-left: 13px; min-width: 0; height: 100% }
+.mark { flex: none; display: flex; align-items: center; justify-content: center;
+  border: 1px solid #2b3441; background: #10161f; color: #6cb0ff;
+  font-family: "Helvetica Neue", Arial, sans-serif; font-weight: 800; letter-spacing: .2px }
+.mark-sm { width: 16px; height: 16px; border-radius: 4px; font-size: 6.5px }
+.mark-lg { width: 44px; height: 44px; border-radius: 10px; font-size: 15px }
+.tb-title { font-size: 12px; color: #97a3b2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
+.wb { flex: none; display: flex; align-items: center; justify-content: center; width: 42px; height: 38px;
+  border: 0; border-radius: 0; background: transparent; padding: 0; color: #97a3b2;
+  transition: background .12s, color .12s }
+.wb:hover { background: #141a23; color: #e9eff6 }
+.wb-close:hover { background: #d64339; color: #fff }
+.wb:focus-visible { outline: none; background: #141a23; color: #e9eff6; box-shadow: inset 0 0 0 2px #2f6feb }
+.wb-close:focus-visible { background: #d64339; color: #fff }
+
+/* body */
+.body { flex: 1; position: relative; min-height: 0; display: flex; flex-direction: column; padding: 22px 26px 20px }
+.ident { flex: none; display: flex; align-items: center; gap: 14px }
+.ident-txt { display: flex; flex-direction: column; gap: 3px; min-width: 0 }
+.ident-row { display: flex; align-items: baseline; gap: 9px }
+.name { font-size: 19px; font-weight: 600; letter-spacing: -.01em; color: #e9eff6 }
+.version { font-size: 11.5px; color: #6e7c8f }
+.lede { font-size: 12.5px; color: #97a3b2; text-wrap: pretty }
+.divider { flex: none; height: 1px; background: #1b2129; margin: 18px 0 0 }
+
+#state { flex: 1; min-height: 0; display: flex; flex-direction: column }
+.state { flex: 1; min-height: 0; display: flex; flex-direction: column; animation: pmIn .18s ease }
+.state-welcome { padding-top: 17px }
+.state-installing, .state-done, .state-error { padding-top: 21px }
+.spacer { flex: 1; min-height: 12px }
+.mono { font-family: "JetBrains Mono", ui-monospace, Consolas, monospace }
+/* a path's tail is its informative end, so it truncates from the left */
+.path { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: left; direction: rtl }
+.label { font-size: 11px; font-weight: 600; letter-spacing: .06em; color: #97a3b2 }
+
+.field { flex: 1; min-width: 0; display: flex; align-items: center; height: 32px;
+  border: 1px solid #303845; border-radius: 6px; background: #10161e; padding: 0 11px }
+.field .path { font-size: 12px; color: #ccd6e1 }
+
+.btn { flex: none; height: 32px; border-radius: 6px; white-space: nowrap; transition: background .12s, border-color .12s, color .12s }
+.btn-2 { border: 1px solid #303845; background: #262d38; padding: 0 15px; font-size: 12.5px; font-weight: 500; color: #ccd6e1 }
+.btn-2:hover { background: #303845; border-color: #45505f; color: #e9eff6 }
+.btn-1 { border: 1px solid rgba(240,246,252,.1); background: #2c9c41; padding: 0 18px; font-size: 13px; font-weight: 600; color: #fff }
+.btn-1:hover { background: #37b350 }
+.btn-2:focus-visible { outline: none; border-color: #2f6feb; box-shadow: 0 0 0 3px rgba(47,111,235,.32) }
+.btn-1:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(47,111,235,.32) }
+
+.footer { display: flex; align-items: center; justify-content: space-between; gap: 16px }
+.footer-r { display: flex; align-items: center; gap: 8px }
+.faint { font-size: 11.5px; color: #6e7c8f }
+
+.facts { display: flex; flex-direction: column; gap: 7px; margin-top: 18px }
+.fact { display: flex; align-items: flex-start; gap: 9px }
+.fact svg { flex: none; margin-top: 2px }
+.fact span { font-size: 12.5px; line-height: 1.35; color: #97a3b2; text-wrap: pretty }
+
+.track { position: relative; height: 4px; border-radius: 999px; background: #10161e; overflow: hidden }
+.seg { position: absolute; top: 0; bottom: 0; left: 0; width: 30%; border-radius: 999px; background: #6cb0ff;
+  animation: pmBar 1.45s cubic-bezier(.66,.04,.34,1) infinite }
+.phases { display: flex; flex-direction: column; gap: 9px; margin-top: 20px }
+.phase { display: flex; align-items: center; gap: 10px; min-height: 20px }
+.phase i { flex: none; display: flex; align-items: center; justify-content: center; width: 14px; height: 14px }
+.dot { width: 7px; height: 7px; border-radius: 50% }
+.dot-cur { background: #6cb0ff }
+.dot-pend { border: 1px solid #303845 }
+.phase span { min-width: 0; text-wrap: pretty; font-size: 12.5px; color: #6e7c8f }
+.phase-done span { color: #97a3b2 }
+.phase-cur span { font-size: 13px; font-weight: 500; color: #e9eff6 }
+
+.head { display: flex; align-items: center; gap: 11px }
+.badge { flex: none; display: flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 50% }
+.badge-ok { background: rgba(74,193,96,.15) }
+.badge-err { background: rgba(244,104,95,.15) }
+.title { font-size: 16px; font-weight: 600; color: #e9eff6; text-wrap: pretty }
+.prose { font-size: 12.5px; line-height: 1.55; color: #ccd6e1; text-wrap: pretty }
+.detail { margin-top: 14px; border: 1px solid #262d38; border-radius: 6px; background: #10161e; padding: 9px 11px;
+  display: flex; flex-direction: column; gap: 3px }
+.detail span { font-size: 11.5px; line-height: 1.6; white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
+.code { color: #f4685f }
+.link-btn { flex: none; border: 0; border-radius: 4px; background: none; padding: 0;
+  font-size: 12px; font-weight: 500; color: #6cb0ff; white-space: nowrap; transition: color .12s }
+.link-btn:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(47,111,235,.32) }
+.copied { color: #4ac160 }
+
+.abort { position: absolute; left: 0; right: 0; bottom: 0; z-index: 10; display: flex; align-items: center; gap: 14px;
+  border-top: 1px solid #303845; background: #1a212b; box-shadow: 0 -10px 28px rgba(1,3,8,.45);
+  padding: 13px 16px; animation: pmUp .16s cubic-bezier(.2,.7,.3,1) }
+.abort-txt { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px }
+.abort-q { font-size: 12.5px; font-weight: 600; color: #e9eff6; text-wrap: pretty }
+.abort-n { font-size: 11.5px; color: #97a3b2; text-wrap: pretty }
+.abort .btn { height: 30px; padding: 0 13px }
+.btn-danger { color: #f4685f }
+.btn-danger:hover { color: #f4685f; background: #262d38; border-color: #45505f; filter: brightness(1.15) }
+
+@media (prefers-reduced-motion: reduce) {
+  .seg { animation: pmPulse 1.4s ease-in-out infinite alternate; transform: none; width: 100% }
+  .state, .abort { animation: none }
+}
+</style>
+
+<div class="tb">
+  <div class="tb-drag" id="drag">
+    <span class="mark mark-sm">.md</span>
+    <span class="tb-title" id="winTitle"></span>
+  </div>
+  <button class="wb" id="btnMin" tabindex="-1">
+    <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1 5.5h8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+  </button>
+  <button class="wb wb-close" id="btnClose" tabindex="-1">
+    <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1.2 1.2 8.8 8.8M8.8 1.2 1.2 8.8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+  </button>
+</div>
+
+<div class="body">
+  <div class="ident">
+    <span class="mark mark-lg">.md</span>
+    <span class="ident-txt">
+      <span class="ident-row">
+        <span class="name">PureMD</span>
+        <span class="version mono" id="version"></span>
+      </span>
+      <span class="lede" id="lede"></span>
+    </span>
+  </div>
+  <div class="divider"></div>
+  <div id="state"></div>
+  <div id="abort"></div>
+</div>
+
+<script>
+const STR = {
+  en: {
+    winTitle: "PureMD Setup",
+    lede: "Offline Markdown viewer and editor. No network, no telemetry.",
+    pathLabel: "INSTALL LOCATION", change: "Change…",
+    space: (req, free) => `Requires ${req} MB · ${free} GB free`,
+    facts: ["Start menu and desktop shortcuts", "Opens .md files by default", "Listed in Apps & features"],
+    install: "Install", license: "MIT License",
+    phases: ["Unpacking files…", "Registering file types…", "Creating shortcuts…"],
+    installingNote: "This usually takes less than a minute.",
+    abortQ: "Cancel the installation?", abortNote: "Files already copied will be removed.",
+    keepGoing: "Keep installing", abortYes: "Cancel install",
+    doneTitle: "PureMD is installed", doneWhere: "INSTALLED IN",
+    doneNote: ".md files now open in PureMD.",
+    launch: "Launch PureMD", launching: "Starting…", finish: "Done",
+    errTitle: "Installation could not finish",
+    errDenied: "The installer could not write to the selected folder. Run it as administrator, or choose another location.",
+    errGeneric: "The installer stopped before it finished. Nothing was left half-installed. Retry, or choose another folder.",
+    copy: "Copy details", copied: "Copied", retry: "Retry", close: "Close"
+  },
+  ru: {
+    winTitle: "Установка PureMD",
+    lede: "Офлайн-вьюер и редактор Markdown. Без сети и телеметрии.",
+    pathLabel: "ПАПКА УСТАНОВКИ", change: "Изменить…",
+    space: (req, free) => `Требуется ${req} МБ · свободно ${free} ГБ`,
+    facts: ["Ярлыки в меню «Пуск» и на рабочем столе", "Открывает файлы .md по умолчанию", "Запись в «Установка и удаление программ»"],
+    install: "Установить", license: "Лицензия MIT",
+    phases: ["Распаковка файлов…", "Регистрация типов файлов…", "Создание ярлыков…"],
+    installingNote: "Обычно занимает меньше минуты.",
+    abortQ: "Прервать установку?", abortNote: "Уже скопированные файлы будут удалены.",
+    keepGoing: "Продолжить", abortYes: "Прервать",
+    doneTitle: "PureMD установлен", doneWhere: "УСТАНОВЛЕНО В",
+    doneNote: "Файлы .md теперь открываются в PureMD.",
+    launch: "Запустить PureMD", launching: "Запуск…", finish: "Готово",
+    errTitle: "Не удалось завершить установку",
+    errDenied: "Установщику не хватило прав на запись в выбранную папку. Запустите его от имени администратора или выберите другую папку.",
+    errGeneric: "Установка прервалась, не дойдя до конца. Наполовину установленного не осталось. Повторите или выберите другую папку.",
+    copy: "Скопировать детали", copied: "Скопировано", retry: "Повторить", close: "Закрыть"
+  },
+  es: {
+    winTitle: "Instalación de PureMD",
+    lede: "Visor y editor de Markdown sin conexión. Sin red ni telemetría.",
+    pathLabel: "CARPETA DE INSTALACIÓN", change: "Cambiar…",
+    space: (req, free) => `Requiere ${req} MB · ${free} GB libres`,
+    facts: ["Accesos directos en Inicio y en el escritorio", "Abre los archivos .md de forma predeterminada", "Aparece en Aplicaciones y características"],
+    install: "Instalar", license: "Licencia MIT",
+    phases: ["Descomprimiendo archivos…", "Registrando tipos de archivo…", "Creando accesos directos…"],
+    installingNote: "Suele tardar menos de un minuto.",
+    abortQ: "¿Cancelar la instalación?", abortNote: "Se eliminarán los archivos ya copiados.",
+    keepGoing: "Continuar", abortYes: "Cancelar",
+    doneTitle: "PureMD está instalado", doneWhere: "INSTALADO EN",
+    doneNote: "Los archivos .md ahora se abren en PureMD.",
+    launch: "Iniciar PureMD", launching: "Iniciando…", finish: "Listo",
+    errTitle: "No se pudo completar la instalación",
+    errDenied: "El instalador no pudo escribir en la carpeta seleccionada. Ejecútelo como administrador o elija otra ubicación.",
+    errGeneric: "La instalación se detuvo antes de terminar. No quedó nada a medio instalar. Reinténtelo o elija otra carpeta.",
+    copy: "Copiar detalles", copied: "Copiado", retry: "Reintentar", close: "Cerrar"
+  }
+};
+
+const CHECK = c => `<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1.9 6.3 4.5 8.9 10.1 3.1" stroke="${c}" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+const send = m => window.ipc.postMessage(m);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+const lang = (navigator.language || "en").slice(0, 2);
+const t = STR[lang] || STR.en;
+
+const app = {
+  view: "welcome",
+  path: "",
+  version: "",
+  reqMb: 0,
+  freeGb: 0,
+  phase: 0,
+  code: "",
+  denied: false,
+  abortOpen: false,
+  copied: false,
+  launching: false,
+};
+
+// Rust drives these four.
+window.setPath = p => { app.path = p; render(); };
+window.setPhase = n => { if (n > app.phase) { app.phase = n; render(); } };
+window.setDone = () => { app.view = "done"; app.abortOpen = false; render(); };
+window.setFailed = (code, denied) => { app.view = "error"; app.code = code; app.denied = denied; app.abortOpen = false; render(); };
+
+function body() {
+  const p = `<span class="path mono">${esc(app.path)}</span>`;
+  if (app.view === "welcome") return `
+    <div class="state state-welcome">
+      <div class="label">${esc(t.pathLabel)}</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:7px">
+        <div class="field">${p}</div>
+        <button class="btn btn-2" id="change" style="padding:0 13px">${esc(t.change)}</button>
+      </div>
+      <div class="faint" style="margin-top:8px">${esc(t.space(app.reqMb, app.freeGb))}</div>
+      <div class="facts">${t.facts.map(f => `<div class="fact">${CHECK("#6e7c8f")}<span>${esc(f)}</span></div>`).join("")}</div>
+      <div class="spacer"></div>
+      <div class="footer">
+        <a href="#" id="license" class="faint">${esc(t.license)}</a>
+        <button class="btn btn-1" id="primary">${esc(t.install)}</button>
+      </div>
+    </div>`;
+
+  if (app.view === "installing") return `
+    <div class="state state-installing">
+      <div class="track"><div class="seg"></div></div>
+      <div class="phases">${t.phases.map((label, i) => {
+        const cls = i < app.phase ? "phase-done" : i === app.phase ? "phase-cur" : "";
+        const icon = i < app.phase ? CHECK("#6e7c8f")
+          : i === app.phase ? `<span class="dot dot-cur"></span>`
+          : `<span class="dot dot-pend"></span>`;
+        return `<div class="phase ${cls}"><i>${icon}</i><span>${esc(label)}</span></div>`;
+      }).join("")}</div>
+      <div class="spacer"></div>
+      <div class="faint">${esc(t.installingNote)}</div>
+    </div>`;
+
+  if (app.view === "done") return `
+    <div class="state state-done">
+      <div class="head">
+        <span class="badge badge-ok"><svg width="14" height="14" viewBox="0 0 12 12" fill="none"><path d="M1.9 6.3 4.5 8.9 10.1 3.1" stroke="#4ac160" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="title">${esc(t.doneTitle)}</span>
+      </div>
+      <div class="label" style="margin-top:20px">${esc(t.doneWhere)}</div>
+      <div class="path mono" style="margin-top:6px;font-size:12px;color:#ccd6e1">${esc(app.path)}</div>
+      <div style="margin-top:14px;font-size:12.5px;color:#97a3b2;text-wrap:pretty">${esc(t.doneNote)}</div>
+      <div class="spacer"></div>
+      <div class="footer" style="justify-content:flex-end">
+        <button class="btn btn-2" id="finish">${esc(t.finish)}</button>
+        <button class="btn btn-1" id="primary">${esc(app.launching ? t.launching : t.launch)}</button>
+      </div>
+    </div>`;
+
+  return `
+    <div class="state state-error">
+      <div class="head">
+        <span class="badge badge-err"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.3" stroke="#f4685f" stroke-width="1.3"/><path d="M8 4.7v4" stroke="#f4685f" stroke-width="1.3" stroke-linecap="round"/><circle cx="8" cy="11.1" r=".8" fill="#f4685f"/></svg></span>
+        <span class="title">${esc(t.errTitle)}</span>
+      </div>
+      <div class="prose" style="margin-top:12px">${esc(app.denied ? t.errDenied : t.errGeneric)}</div>
+      <div class="detail">
+        <span class="path mono" style="color:#97a3b2">${esc(app.path)}</span>
+        <span class="mono code">${esc(app.code)}</span>
+      </div>
+      <div class="spacer"></div>
+      <div class="footer">
+        <button class="link-btn ${app.copied ? "copied" : ""}" id="copy">${esc(app.copied ? t.copied : t.copy)}</button>
+        <div class="footer-r">
+          <button class="btn btn-2" id="finish">${esc(t.close)}</button>
+          <button class="btn btn-1" id="primary">${esc(t.retry)}</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function render() {
+  document.getElementById("state").innerHTML = body();
+  document.getElementById("abort").innerHTML = app.abortOpen ? `
+    <div class="abort">
+      <span class="abort-txt">
+        <span class="abort-q">${esc(t.abortQ)}</span>
+        <span class="abort-n">${esc(t.abortNote)}</span>
+      </span>
+      <button class="btn btn-2" id="abortNo">${esc(t.keepGoing)}</button>
+      <button class="btn btn-2 btn-danger" id="abortYes">${esc(t.abortYes)}</button>
+    </div>` : "";
+
+  on("primary", primary);
+  on("change", () => send("pick"));
+  on("finish", () => send("close"));
+  on("license", e => { e.preventDefault(); send("license"); });
+  on("copy", copyDetails);
+  on("abortNo", () => { app.abortOpen = false; render(); });
+  on("abortYes", () => { app.view = "welcome"; app.abortOpen = false; app.phase = 0; send("abort"); render(); });
+
+  // Enter should launch straight from the done screen.
+  if (app.view === "done" && !app.launching) {
+    requestAnimationFrame(() => document.getElementById("primary")?.focus());
+  }
+}
+
+function on(id, fn) {
+  const el = document.getElementById(id);
+  if (el) el.onclick = fn;
+}
+
+function primary() {
+  if (app.view === "welcome" || app.view === "error") {
+    app.view = "installing";
+    app.phase = 0;
+    render();
+    send("install");
+  } else if (app.view === "done") {
+    if (app.launching) return;
+    app.launching = true;
+    render();
+    send("launch");
+  }
+}
+
+function escape() {
+  if (app.view === "installing") { app.abortOpen = !app.abortOpen; render(); }
+  else send("close");
+}
+
+function copyDetails() {
+  const text = `PureMD ${app.version} setup\n${app.path}\n${app.code}`;
+  const ta = document.createElement("textarea");
+  ta.value = text;
+  document.body.appendChild(ta);
+  ta.select();
+  // ponytail: execCommand, not navigator.clipboard — with_html gives a null
+  // origin, which is not a secure context, so the async API is unavailable.
+  try { document.execCommand("copy"); } catch (e) {}
+  ta.remove();
+  app.copied = true;
+  render();
+  setTimeout(() => { app.copied = false; render(); }, 2200);
+}
+
+document.getElementById("drag").addEventListener("mousedown", e => {
+  if (e.button === 0) send("drag");
+});
+document.getElementById("btnMin").onclick = () => send("minimize");
+document.getElementById("btnClose").onclick = escape;
+
+window.addEventListener("keydown", e => {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    if (app.abortOpen) { app.abortOpen = false; render(); }
+    else primary();
+  } else if (e.key === "Escape") {
+    e.preventDefault();
+    escape();
+  }
+});
+
+window.boot = init => {
+  Object.assign(app, init);
+  document.getElementById("winTitle").textContent = t.winTitle;
+  document.getElementById("lede").textContent = t.lede;
+  document.getElementById("version").textContent = app.version;
+  render();
+};
+
+// Rust substitutes the boot() call here, inline, so there is no load race.
+/*BOOT*/
+</script>

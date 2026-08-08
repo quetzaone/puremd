@@ -1,0 +1,3 @@
+# The NSIS installer copied in by tools/build-installer.mjs.
+payload/
+target/

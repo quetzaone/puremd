@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="1200" height="360" viewBox="0 0 1200 360"
+     role="img" aria-labelledby="hero-title hero-desc">
+  <title id="hero-title">PureMD</title>
+  <desc id="hero-desc">PureMD opens Markdown you did not write without letting it do anything. A miniature of the application window shows a document whose image has refused to load and says it is blocked in Safe mode.</desc>
+
+  <defs>
+    <clipPath id="card-clip">
+      <rect x="0" y="0" width="470" height="252" rx="14"/>
+    </clipPath>
+    <symbol id="shield" viewBox="0 0 12 14">
+      <path d="M6 0.6 L11.4 2.8 V7 C11.4 10.2 9 12.6 6 13.5 C3 12.6 0.6 10.2 0.6 7 V2.8 Z"
+            fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+    </symbol>
+  </defs>
+
+  <rect width="1200" height="360" rx="26" fill="#0d1219"/>
+  <rect x="0.75" y="0.75" width="1198.5" height="358.5" rx="25.25"
+        fill="none" stroke="#2b3441" stroke-width="1.5"/>
+
+  <g id="title-block">
+    <text x="64" y="92" font-family="ui-monospace,SFMono-Regular,Menlo,monospace"
+          font-size="18" letter-spacing="2.6" fill="#6e7c8f">WINDOWS · MARKDOWN READER</text>
+
+    <text x="64" y="176" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+          font-size="76" font-weight="800" letter-spacing="-1" fill="#e9eff6">PureMD</text>
+
+    <text x="64" y="228" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+          font-size="27" fill="#ccd6e1">Opens Markdown you didn't write —</text>
+    <text x="64" y="266" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+          font-size="27" fill="#ccd6e1">without letting it do anything.</text>
+
+    <rect x="64" y="298" width="46" height="3" rx="1.5" fill="#6cb0ff"/>
+    <text x="64" y="330" font-family="ui-monospace,SFMono-Regular,Menlo,monospace"
+          font-size="18" fill="#6e7c8f">MIT · Tauri + React · .md .markdown .mdx</text>
+  </g>
+
+  <g id="project-proof" transform="translate(666 54)">
+    <rect x="0" y="0" width="470" height="252" rx="14" fill="#161c26"/>
+
+    <g clip-path="url(#card-clip)">
+      <rect x="0" y="0" width="470" height="44" fill="#1c2330"/>
+      <line x1="0" y1="44" x2="470" y2="44" stroke="#2b3441" stroke-width="1"/>
+
+      <g transform="translate(20 15)" color="#4ac160">
+        <use href="#shield" x="0" y="0" width="12" height="14"/>
+        <text x="20" y="12" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+              font-size="17" fill="#4ac160">Safe mode</text>
+      </g>
+
+      <rect x="330" y="14" width="120" height="16" rx="4" fill="#232b36"/>
+
+      <rect x="28" y="76" width="186" height="13" rx="3" fill="#97a3b2" opacity="0.55"/>
+      <rect x="28" y="106" width="330" height="8" rx="3" fill="#6e7c8f" opacity="0.4"/>
+      <rect x="28" y="126" width="286" height="8" rx="3" fill="#6e7c8f" opacity="0.4"/>
+
+      <g transform="translate(28 156)">
+        <rect x="0" y="0" width="414" height="64" rx="9" fill="#1b222c"/>
+        <rect x="0.6" y="0.6" width="412.8" height="62.8" rx="8.4"
+              fill="none" stroke="#d8a32c" stroke-opacity="0.38" stroke-width="1.2"/>
+        <g transform="translate(20 23)" color="#d8a32c">
+          <use href="#shield" x="0" y="0" width="15" height="17.5"/>
+        </g>
+        <text x="54" y="28" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+              font-size="20" fill="#ccd6e1">diagram.png</text>
+        <text x="54" y="50" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+              font-size="18" fill="#97a3b2">blocked in Safe mode</text>
+      </g>
+    </g>
+
+    <rect x="0.6" y="0.6" width="468.8" height="250.8" rx="13.4"
+          fill="none" stroke="#2b3441" stroke-width="1.2"/>
+  </g>
+</svg>

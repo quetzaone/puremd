@@ -1,0 +1,87 @@
+# Submits every published release asset to VirusTotal and records the result in
+# the release notes. The permalink is bound to the file's SHA-256, so it stays
+# accurate as engines update; the ratio is a snapshot and is labelled as one.
+#
+# Requires a repository secret named VT_API_KEY (a free virustotal.com API key).
+# Without it the job exits cleanly rather than failing every release.
+#
+# Uploading publishes the installer to VirusTotal, which shares samples with
+# antivirus vendors and makes the report readable by anyone holding the hash.
+# That is intended here: the binary is already a public release artifact.
+name: VirusTotal
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write # only to append the report to the release body
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Submit assets and append the report
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VT_API_KEY: ${{ secrets.VT_API_KEY }}
+          REPO: ${{ github.repository }}
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${VT_API_KEY:-}" ]; then
+            echo "VT_API_KEY is not set; skipping." >&2
+            exit 0
+          fi
+
+          # Every asset, not just the exe: the portable download is a zip, and
+          # anything added later should be scanned without editing a pattern.
+          gh release download "$TAG" --repo "$REPO" --dir assets
+
+          report=$'\n### VirusTotal\n\nDetection ratios below are a snapshot taken when this release was published; each permalink stays current as engines update.\n\n| Asset | Detections at publication | Report |\n| --- | ---: | --- |\n'
+
+          for file in assets/*; do
+            name=$(basename "$file")
+            sha=$(sha256sum "$file" | cut -d' ' -f1)
+
+            # Upload. The file endpoint accepts up to 32 MiB, which every
+            # installer this project produces is comfortably under.
+            id=$(curl -sS --fail-with-body -X POST \
+              https://www.virustotal.com/api/v3/files \
+              -H "x-apikey: $VT_API_KEY" \
+              -F "file=@$file" | jq -r '.data.id')
+
+            # Analysis is queued, so poll rather than assume it is ready.
+            status=""
+            for _ in $(seq 1 30); do
+              status=$(curl -sS --fail-with-body \
+                -H "x-apikey: $VT_API_KEY" \
+                "https://www.virustotal.com/api/v3/analyses/$id" \
+                | jq -r '.data.attributes.status')
+              [ "$status" = "completed" ] && break
+              sleep 20
+            done
+
+            if [ "$status" != "completed" ]; then
+              echo "::warning::VirusTotal did not finish analysing $name in time"
+              ratio="pending"
+            else
+              stats=$(curl -sS --fail-with-body \
+                -H "x-apikey: $VT_API_KEY" \
+                "https://www.virustotal.com/api/v3/files/$sha" \
+                | jq -r '.data.attributes.last_analysis_stats')
+              malicious=$(jq -r '.malicious' <<<"$stats")
+              suspicious=$(jq -r '.suspicious' <<<"$stats")
+              total=$(jq -r '[.harmless, .malicious, .suspicious, .undetected] | add' <<<"$stats")
+              ratio="$((malicious + suspicious)) / $total"
+            fi
+
+            report+="| \`$name\` | $ratio | [View report](https://www.virustotal.com/gui/file/$sha) |"$'\n'
+          done
+
+          # Append rather than replace, so the hand-written notes survive.
+          gh release view "$TAG" --repo "$REPO" --json body --jq '.body' > body.md
+          printf '%s' "$report" >> body.md
+          gh release edit "$TAG" --repo "$REPO" --notes-file body.md

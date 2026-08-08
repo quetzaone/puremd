@@ -1,0 +1,62 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "PureMD",
+  "version": "../package.json",
+  "identifier": "io.github.quetzaone.puremd",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run build",
+    "devUrl": "http://localhost:1420",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "create": false,
+        "url": "index.html",
+        "title": "PureMD",
+        "width": 980,
+        "height": 720,
+        "minWidth": 520,
+        "minHeight": 420,
+        "decorations": false,
+        "visible": false,
+        "backgroundColor": "#0d1219"
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' blob:; connect-src 'none'; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["nsis"],
+    "category": "Utility",
+    "icon": [
+      "icons/icon.ico",
+      "icons/icon-32.png",
+      "icons/icon-128.png",
+      "icons/icon-256.png"
+    ],
+    "shortDescription": "Pure local Markdown viewer",
+    "longDescription": "A minimal local Markdown viewer/editor for Windows.",
+    "resources": {
+      "../src/assets/fonts/LICENSE.txt": "JetBrainsMono-OFL.txt"
+    },
+    "windows": {
+      "nsis": {
+        "installerIcon": "icons/icon.ico",
+        "uninstallerIcon": "icons/icon.ico"
+      }
+    },
+    "fileAssociations": [
+      {
+        "ext": ["md", "markdown"],
+        "name": "Markdown Document",
+        "description": "Markdown document",
+        "role": "Viewer"
+      }
+    ]
+  }
+}

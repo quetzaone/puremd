@@ -1,0 +1,27 @@
+[package]
+name = "puremd-installer"
+version = "1.1.0"
+description = "Setup window for PureMD"
+edition = "2021"
+license = "MIT"
+publish = false
+
+[[bin]]
+name = "PureMD-Setup"
+path = "src/main.rs"
+
+[build-dependencies]
+embed-resource = "=3.0.9"
+
+[dependencies]
+tao = "=0.35.3"
+wry = "=0.55.1"
+rfd = { version = "=0.16.0", default-features = false }
+
+# The whole point of this binary is to be the first thing a user downloads.
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true

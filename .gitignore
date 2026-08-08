@@ -1,0 +1,59 @@
+# Dependencies
+node_modules/
+
+# Frontend and Tauri build outputs
+dist/
+src-tauri/target/
+installer/target/
+installer/payload/
+tauri-smoke-dist/
+
+# Local release artifacts; publish binaries via GitHub Releases instead.
+release/
+
+# Local caches and temporary tooling
+.cargo-home/
+.npm-cache/
+.tauri-tmp/
+.design-audit-tools/
+src-tauri/.cargo/
+
+# Assistant and agent artifacts. This is a public repository and none of these
+# describe the program — they describe how someone happened to work on it.
+.agents/
+.claude/
+.codex/
+.cursor/
+.aider*
+AGENTS.md
+CLAUDE.md
+codex-puremd-instructions.md
+skills-lock.json
+
+# Working notes and hand-off documents kept beside the project
+design-audit.md
+DESIGN-NOTES.md
+DIALOGUE.md
+HANDOFF.md
+
+# Build environment
+.env
+.env.*
+
+# Local vendor experiments and crate downloads
+src-tauri/vendor/
+
+# Editor, OS, and temporary files
+.vscode/
+.idea/
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+Thumbs.db
+.DS_Store
+
+# Local backups produced during repair/audit sessions
+*.bak
+*.backup-*
